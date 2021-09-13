@@ -28,21 +28,26 @@ class Bb(models.Model):
 
 
     def price_dollar(self):
-        url = 'https://banki24.by/grodno/kurs'
-        source = requests.get(url)
-        main_text = source.text
+        try:
+            url = 'https://banki24.by/grodno/kurs'
+            source = requests.get(url)
+            main_text = source.text
 
-        soup = BeautifulSoup(main_text)
-        table = soup.find('table', {'class': 'table'})
-        td = table.find('tr', {'class': 'static'})
-        td = td.text
-        td = td[:9]
-        conv = td[2]+'.'+td[4:6]
-        conv = float(conv)
-        doll = self.price/conv
-        doll = round(doll, 2)
+            soup = BeautifulSoup(main_text)
+            table = soup.find('table', {'class': 'table'})
+            td = table.find('tr', {'class': 'static'})
+            td = td.text
+            td = td[:9]
+            conv = td[2]+'.'+td[4:6]
+            conv = float(conv)
+            doll = self.price/conv
+            doll = round(doll, 2)
 
         return str('Цена в долларах: '+ str(doll) +' $.')
+
+        except requests.exceptions.ConnectionError:
+            r.status_code = "Connection refused"
+
 
 
 
