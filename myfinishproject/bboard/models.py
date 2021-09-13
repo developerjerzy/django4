@@ -43,7 +43,7 @@ class Bb(models.Model):
             doll = self.price/conv
             doll = round(doll, 2)
 
-        return str('Цена в долларах: '+ str(doll) +' $.')
+            return str('Цена в долларах: '+ str(doll) +' $.')
 
         except requests.exceptions.ConnectionError:
             r.status_code = "Connection refused"
