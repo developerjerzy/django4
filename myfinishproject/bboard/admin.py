@@ -4,6 +4,7 @@ from .models import Rubric
 
 
 class BbAdmin(admin.ModelAdmin):
+    """ Класс определяет поля ввода на страничке администратора """
     list_display = ('title', 'content', 'price','phone', 'published', 'rubric')
     list_display_links = ('title', 'content')
     search_fields = ('title', 'content',)

@@ -13,6 +13,9 @@ from django.contrib import messages
 
 
 def index(request):
+    """Данная функция отопражает главную страницу со всеми объявлениями
+
+    """
     bbs = Bb.objects.all()
     rubrics = Rubric.objects.all()
 

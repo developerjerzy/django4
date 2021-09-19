@@ -7,8 +7,17 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 
-class Bb(models.Model):
 
+class Bb(models.Model):
+    """ Класс описывает модель таблицы в базе данных
+
+    title - наименование товара
+    content - описание товара
+    price - цена товара. Валидация по вводу от 1 до 100000
+    published - когда опубликовано объявление
+    phone - номер телефона. Валидация по phone_regex в определенный формат
+    rubric - тип рубрики к которому относится товар. Для упрощенного поиска
+    """
 
     title = models.CharField(max_length=50, verbose_name='Товар', help_text='Введите название товара')
 
@@ -28,43 +37,54 @@ class Bb(models.Model):
 
 
     def price_dollar(self):
-        try:
-            url = 'https://banki24.by/grodno/kurs'
-            source = requests.get(url)
-            main_text = source.text
+        """ Функция выводит цену в долларах по актуальному курсу на день просмотра"""
+        url = 'https://banki24.by/grodno/kurs'
 
-            soup = BeautifulSoup(main_text)
-            table = soup.find('table', {'class': 'table'})
-            td = table.find('tr', {'class': 'static'})
-            td = td.text
-            td = td[:9]
-            conv = td[2]+'.'+td[4:6]
-            conv = float(conv)
-            doll = self.price/conv
-            doll = round(doll, 2)
+        source = requests.post(url,  timeout=5)
+        main_text = source.text
 
-            return str('Цена в долларах: '+ str(doll) +' $.')
+        soup = BeautifulSoup(main_text)
+        table = soup.find('table', {'class': 'table'})
+        td = table.find('tr', {'class': 'static'})
+        td = td.text
+        td = td[:9]
+        conv = td[2]+'.'+td[4:6]
+        conv = float(conv)
+        doll = self.price/conv
+        doll = round(doll, 2)
 
-        except requests.exceptions.ConnectionError:
-            r.status_code = "Connection refused"
+        return str('Цена в долларах: '+ str(doll) +' $.')
+
 
 
 
 
 
     class Meta:
+        """ Определяет употребление слова 'Объявление'
+
+        в единственном и множественном числе.
+        """
         verbose_name_plural = 'Объявления'
         verbose_name = 'Объявлениe'
         ordering = ['-published']
 
 
 class Rubric(models.Model):
+    """Класс РУбрика
+
+    Позволяет распределить выбранные товары по категориям и потом просмотреть выбранную категорию
+    """
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название')
 
     def __str__(self):
         return self.name
 
     class Meta:
+        """ Определяет употребление слова 'Рубрика'
+
+             в единственном и множественном числе.
+             """
         verbose_name_plural = 'Рубрики'
         verbose_name = 'Рубрика'
         ordering = ['name']
