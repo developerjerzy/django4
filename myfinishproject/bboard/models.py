@@ -43,7 +43,7 @@ class Bb(models.Model):
         source = requests.post(url,  timeout=5)
         main_text = source.text
 
-        soup = BeautifulSoup(main_text)
+        soup = BeautifulSoup(main_text,features="lxml")
         table = soup.find('table', {'class': 'table'})
         td = table.find('tr', {'class': 'static'})
         td = td.text
