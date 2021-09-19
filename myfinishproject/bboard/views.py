@@ -13,9 +13,7 @@ from django.contrib import messages
 
 
 def index(request):
-    """Данная функция отопражает главную страницу со всеми объявлениями
-
-    """
+    """Данная функция отопражает главную страницу со всеми объявлениями. """
     bbs = Bb.objects.all()
     rubrics = Rubric.objects.all()
 
@@ -36,6 +34,7 @@ def index(request):
 
 
 def by_rubric(request, rubric_id):
+    """ Данная функция отвечает за отображение объявлений выбранной рубрики."""
     bbs = Bb.objects.filter(rubric=rubric_id)
     rubrics = Rubric.objects.all()
 
